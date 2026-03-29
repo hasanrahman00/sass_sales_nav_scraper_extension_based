@@ -25,9 +25,9 @@ const logger = require('../lib/logger');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  max: 20,                       // Connections per API process
-  idleTimeoutMillis: 30000,      // Close idle connections after 30s
-  connectionTimeoutMillis: 5000, // Fail if pool full after 5s
+  max: parseInt(process.env.DB_POOL_MAX),
+  idleTimeoutMillis: parseInt(process.env.DB_IDLE_TIMEOUT),
+  connectionTimeoutMillis: parseInt(process.env.DB_CONNECT_TIMEOUT),
 });
 
 // Log pool-level errors (not query errors — those bubble up normally)
