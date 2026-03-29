@@ -1,0 +1,11 @@
+{
+  "name": "vikileads",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "dev:api": "cd apps/api && npm run dev",
+    "dev:web": "cd apps/web && npm run dev",
+    "test": "cd apps/api && npm test"
+  }
+}

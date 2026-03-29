@@ -1,0 +1,66 @@
+# VikiLeads — Docker Compose (Development)
+# RUNS: PostgreSQL 16 + Redis 7
+# API + Frontend: run with npm run dev (not Docker)
+#
+# docker compose up -d       Start
+# docker compose ps          Status
+# docker compose down        Stop
+# docker compose down -v     Stop + DELETE data
+
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: vikileads-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: vikileads
+      POSTGRES_PASSWORD: vikileads_dev
+      POSTGRES_DB: vikileads
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    command: >
+      postgres
+        -c shared_buffers=256MB
+        -c work_mem=16MB
+        -c maintenance_work_mem=128MB
+        -c effective_cache_size=512MB
+        -c max_connections=100
+        -c fsync=on
+        -c synchronous_commit=on
+        -c full_page_writes=on
+        -c wal_level=replica
+        -c checkpoint_timeout=5min
+        -c max_wal_size=256MB
+    shm_size: '256mb'
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vikileads -d vikileads"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: vikileads-redis
+    ports:
+      - "6379:6379"
+    command: >
+      redis-server
+        --maxmemory 1gb
+        --maxmemory-policy allkeys-lru
+        --appendonly yes
+    volumes:
+      - redisdata:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+  redisdata:
