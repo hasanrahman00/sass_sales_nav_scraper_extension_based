@@ -13,6 +13,7 @@ require('dotenv').config();
 const app = require('./app');
 const logger = require('./lib/logger');
 const errorHandler = require('./middleware/errorHandler');
+const pool = require('./db/pool');
 
 const PORT = process.env.PORT || 3001;
 
@@ -50,7 +51,10 @@ const server = app.listen(PORT, () => {
 // ─── Shutdown ───────────────────────────────────────────
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received, shutting down');
-  server.close(() => process.exit(0));
+  server.close(async () => {
+    await pool.end();   // Close all DB connections cleanly
+    process.exit(0);
+  });
   setTimeout(() => process.exit(1), 10000);
 });
 

@@ -12,7 +12,7 @@
 const pool = require('./pool');
 const logger = require('../lib/logger');
 
-const SLOW_QUERY_MS = 500;
+const SLOW_QUERY_MS = parseInt(process.env.DB_SLOW_QUERY_MS) || 500;
 
 const db = {
   async query(text, params) {
