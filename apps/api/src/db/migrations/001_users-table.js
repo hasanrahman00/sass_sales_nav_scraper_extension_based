@@ -27,7 +27,7 @@ exports.up = (pgm) => {
     email: { type: 'varchar(255)', notNull: true, unique: true },
     password_hash: { type: 'varchar(255)', notNull: true },
     name: { type: 'varchar(100)' },
-    plan: { type: 'varchar(20)', notNull: true, default: "'free'" },
+    plan: { type: 'varchar(20)', notNull: true, default: 'free' },
     dodo_customer_id: { type: 'varchar(255)' },
     email_verified: { type: 'boolean', notNull: true, default: false },
     onboarding_completed: { type: 'boolean', notNull: true, default: false },

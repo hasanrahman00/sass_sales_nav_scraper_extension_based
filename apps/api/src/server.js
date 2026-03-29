@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 3001;
 app.use(require('./routes/health'));
 
 // Dashboard routes (JWT auth — requireAuth):
-// Day 3:  app.use('/api/v1/auth', require('./routes/auth.routes'));
+app.use('/api/v1/auth', require('./routes/auth.routes'));
 // Day 6:  app.use('/api/v1/api-keys', requireAuth, require('./routes/apikey.routes'));
 // Day 10: app.use('/api/v1/enrichment', requireAuth, require('./routes/enrichment.routes'));
 // Day 11: app.use('/api/v1/events', require('./routes/events.routes'));
