@@ -11,6 +11,7 @@ const { signJWT, createRefreshToken } = require('../lib/tokens');
 const { ERROR_CODES } = require('@vikileads/shared');
 
 const BCRYPT_COST = 12; // ~250ms per hash
+const DUMMY_HASH = '$2b$12$000000000000000000000uVHbDWMOV3YC7eSJLR7NOHhPkaqG3Cq';
 
 async function createUser({ email, password, name }) {
   const hash = await bcrypt.hash(password, BCRYPT_COST);
@@ -35,7 +36,10 @@ async function loginUser({ email, password, device = 'web' }) {
     'SELECT id, email, name, plan, password_hash FROM users WHERE email = $1',
     [email]
   );
+
+  // Always run bcrypt — prevents timing-based email enumeration
   if (rows.length === 0) {
+    await bcrypt.compare(password, DUMMY_HASH); // Same ~250ms delay
     throw new AppError('Invalid email or password', 401, ERROR_CODES.INVALID_CREDENTIALS);
   }
 
